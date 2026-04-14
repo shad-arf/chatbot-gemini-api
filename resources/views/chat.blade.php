@@ -222,6 +222,33 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        @media (max-width: 768px) {
+            .ai-message, .user-message {
+                max-width: 95%;
+            }
+
+            footer {
+                padding: 1rem 0;
+            }
+
+            .action-btn {
+                padding: 6px 10px;
+            }
+
+            #userInput {
+                padding: 10px 12px;
+            }
+
+            .header-left, .header-right {
+                gap: 8px;
+            }
+
+            img.w-10 {
+                width: 32px;
+                height: 32px;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-100" style="background-color: #252728;">
