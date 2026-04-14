@@ -57,6 +57,9 @@ class ChatController extends Controller
     )]
     public function chat(ChatRequest $request): JsonResponse
     {
+        // Increase timeout for this operation
+        set_time_limit(120);
+
         // 1. Resolve Bot from DB
         $bot = Bot::where('key', $request->bot_key)->first();
 
@@ -121,28 +124,59 @@ class ChatController extends Controller
         $apiKey = config('services.openrouter.key');
         $model = config('services.openrouter.model');
 
-        $response = Http::withHeaders([
-                'Authorization' => "Bearer {$apiKey}",
-                'Content-Type' => 'application/json',
-                'HTTP-Referer' => config('app.url'),
-                'X-Title' => config('app.name'),
-            ])
-            ->connectTimeout(15)
-            ->timeout(60)
-            ->retry(3, 200, fn ($e) => $e instanceof \Illuminate\Http\Client\ConnectionException)
-            ->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model' => $model,
-                'messages' => $messages,
-            ]);
+        if (!$apiKey) {
+            return response()->json(['error' => 'OpenRouter API key not configured'], 500);
+        }
+
+        try {
+            $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$apiKey}",
+                    'Content-Type' => 'application/json',
+                    'HTTP-Referer' => config('app.url'),
+                    'X-Title' => config('app.name'),
+                ])
+                ->connectTimeout(10)
+                ->timeout(45)
+                ->retry(1, 100, fn ($e) => $e instanceof \Illuminate\Http\Client\ConnectionException)
+                ->post('https://openrouter.ai/api/v1/chat/completions', [
+                    'model' => $model,
+                    'messages' => $messages,
+                ]);
+        } catch (\Exception $e) {
+            \Log::error('OpenRouter API Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to connect to AI service: ' . $e->getMessage()], 503);
+        }
 
         if ($response->failed()) {
-            return response()->json(['error' => 'OpenRouter connection failed', 'details' => $response->json()], 500);
+            $error = $response->json();
+            \Log::error('OpenRouter API failed', ['status' => $response->status(), 'response' => $error]);
+            return response()->json(['error' => 'OpenRouter connection failed', 'details' => $error], 500)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*');
         }
 
         // 6. Parse response
-        $data = $response->json();
-        $text = $data['choices'][0]['message']['content'] ?? 'No response generated.';
+        try {
+            $data = $response->json();
 
-        return response()->json(['response' => $text]);
+            if (!isset($data['choices'][0]['message']['content'])) {
+                \Log::warning('Invalid OpenRouter response structure', ['response' => $data]);
+                return response()->json(['error' => 'Invalid response from AI service'], 500)
+                    ->header('Content-Type', 'application/json')
+                    ->header('Access-Control-Allow-Origin', '*');
+            }
+
+            $text = $data['choices'][0]['message']['content'];
+
+            return response()->json(['response' => $text])
+                ->header('Content-Type', 'application/json')
+                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Access-Control-Allow-Origin', '*');
+        } catch (\Exception $e) {
+            \Log::error('Failed to parse OpenRouter response', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to parse AI response'], 500)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*');
+        }
     }
 }

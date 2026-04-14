@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تاڤیار - چاتبۆتی کوردی</title>
+    <link rel="icon" href="/storage/logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;400;700&display=swap" rel="stylesheet">
@@ -103,6 +104,7 @@
             gap: 12px;
             max-width: 80%;
             align-items: flex-start;
+            margin-inline-end: auto;
         }
 
         .user-message {
@@ -110,7 +112,7 @@
             gap: 12px;
             flex-direction: row-reverse;
             max-width: 80%;
-            margin-left: auto;
+            margin-inline-start: auto;
             align-items: flex-start;
         }
 
@@ -133,7 +135,7 @@
         }
 
         .user-bubble {
-            background-color: #1e40af;
+            background-color: #020461;
             color: white;
             border-top-left-radius: 4px;
         }
@@ -221,7 +223,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
+<body class="text-gray-100" style="background-color: #252728;">
 
     <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-10 shadow-lg">
         <div class="max-w-4xl mx-auto px-4 py-4 header-content">
@@ -235,9 +237,6 @@
                 <button onclick="clearChat()" class="action-btn bg-gray-700 hover:bg-red-700/30 text-gray-200 hover:text-white" title="پاکی کردن">
                     🗑️
                 </button>
-                <a href="/admin" class="action-btn bg-gray-700 hover:bg-gray-600 text-gray-200 hover:text-white text-sm">
-                    بەڕێوەبێری سیستەم
-                </a>
             </div>
         </div>
     </header>
@@ -260,16 +259,16 @@
             </div>
         </main>
 
-        <footer class="fixed bottom-0 w-full bg-gray-900 border-t border-gray-800">
+        <footer class="fixed bottom-0 w-full border-t border-gray-800" style="background-color: #252728;">
             <div class="max-w-4xl mx-auto px-4 py-3">
                 <div class="relative flex items-center gap-2">
                     <input type="text"
                            id="userInput"
                            placeholder="پەیامەکەت لێرە بنووسە..."
-                           class="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg py-3 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
+                           class="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg py-3 px-4 focus:outline-none focus:border-[#020461] focus:ring-1 focus:ring-[#020461] transition-all text-sm"
                            onkeypress="if(event.key === 'Enter') sendMessage()">
 
-                    <button onclick="sendMessage()" id="sendBtn" class="action-btn bg-blue-600 hover:bg-blue-500 text-white flex-shrink-0" title="بنێرە">
+                    <button onclick="sendMessage()" id="sendBtn" class="action-btn bg-[#020461] hover:bg-[#030578] text-white flex-shrink-0" title="بنێرە">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 -rotate-90">
                             <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
                         </svg>
@@ -372,12 +371,21 @@
             }
 
             function renderMarkdown(text) {
-                // Configure marked options
-                marked.setOptions({
-                    breaks: true,
-                    gfm: true
-                });
-                return marked(text);
+                // Check if marked library is loaded
+                if (typeof marked === 'undefined') {
+                    // Fallback: escape HTML and preserve line breaks
+                    return '<p>' + escapeHtml(text).replace(/\n/g, '<br>') + '</p>';
+                }
+                try {
+                    // Use marked.parse() for newer versions, marked() for older
+                    if (typeof marked.parse === 'function') {
+                        return marked.parse(text);
+                    }
+                    return marked(text);
+                } catch (e) {
+                    console.error('Markdown render error:', e);
+                    return '<p>' + escapeHtml(text).replace(/\n/g, '<br>') + '</p>';
+                }
             }
 
             function addMessage(type, text, save = true) {
@@ -401,7 +409,7 @@
                 } else if (type === 'user') {
                     messageDiv.className = 'user-message message-enter';
                     messageDiv.innerHTML = `
-                        <div class="message-avatar bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold text-sm flex items-center justify-center">👤</div>
+                        <div class="message-avatar text-white font-bold text-sm flex items-center justify-center" style="background-color: #020461;">👤</div>
                         <div class="chat-bubble user-bubble text-sm">
                             <p>${escapeHtml(text)}</p>
                         </div>
@@ -536,7 +544,7 @@
                         } else if (msg.type === 'user') {
                             messageDiv.className = 'user-message';
                             messageDiv.innerHTML = `
-                                <div class="message-avatar bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold text-sm flex items-center justify-center">👤</div>
+                                <div class="message-avatar text-white font-bold text-sm flex items-center justify-center" style="background-color: #020461;">👤</div>
                                 <div class="chat-bubble user-bubble text-sm">
                                     <p>${escapeHtml(msg.text)}</p>
                                 </div>
