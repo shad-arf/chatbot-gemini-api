@@ -108,7 +108,7 @@
         </main>
     @else
         <main class="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 overflow-y-auto -webkit-overflow-scrolling-touch" id="messagesContainer" style="height: calc(100dvh - 180px);">
-            <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse">
+            <div class="flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse">
                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
                 <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                     <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
