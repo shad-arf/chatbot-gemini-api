@@ -34,12 +34,13 @@
             display: flex;
             flex-direction: column;
             padding: 1rem;
-            padding-bottom: 160px;
             gap: 1rem;
         }
 
         footer {
             flex-shrink: 0;
+            width: 100%;
+            border-top: 1px solid #1f2937;
         }
 
         .message-enter {
@@ -234,7 +235,10 @@
                 </span>
             </div>
             <div class="header-right">
-                <button onclick="clearChat()" class="action-btn bg-gray-700 hover:bg-red-700/30 text-gray-200 hover:text-white" title="پاکی کردن">
+                <button onclick="location.reload()" class="text-xl cursor-pointer hover:opacity-70 transition-opacity" title="نووێن کردن">
+                    ↻
+                </button>
+                <button onclick="clearChat()" class="text-xl cursor-pointer hover:opacity-70 transition-opacity" title="پاکی کردن">
                     🗑️
                 </button>
             </div>
@@ -259,7 +263,7 @@
             </div>
         </main>
 
-        <footer class="fixed bottom-0 w-full border-t border-gray-800" style="background-color: #252728;">
+        <footer class="border-t border-gray-800" style="background-color: #252728;">
             <div class="max-w-4xl mx-auto px-4 py-3">
                 <div class="relative flex items-center gap-2">
                     <input type="text"
