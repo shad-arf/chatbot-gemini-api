@@ -1,0 +1,156 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Chatbot Developer API",
+        "description": "API documentation for the secure, backend-only Chatbot service.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://chatbot-api.test",
+            "description": "Herd Local Development Server"
+        }
+    ],
+    "paths": {
+        "/api/bots": {
+            "post": {
+                "tags": [
+                    "Bots"
+                ],
+                "summary": "Register a new Bot configuration",
+                "description": "Creates a bot with a specific instruction and returns a unique key for the frontend.",
+                "operationId": "17baeec8d1b8ff6f7c20ec780c858452",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "instruction"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Friendly Support Bot"
+                                    },
+                                    "instruction": {
+                                        "type": "string",
+                                        "example": "You are a warm and friendly support assistant."
+                                    },
+                                    "origin_url": {
+                                        "type": "string",
+                                        "example": "https://frontend.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Bot created successfully"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/api/bots/{key}": {
+            "get": {
+                "tags": [
+                    "Bots"
+                ],
+                "summary": "Retrieve bot configuration",
+                "operationId": "4024ea6a2184712ed43b841a0db6abc3",
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Bot not found"
+                    }
+                }
+            }
+        },
+        "/api/chat": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Send a message to a specific bot",
+                "description": "Uses a Bot Key to resolve the system instructions silently from the database.",
+                "operationId": "a759b5c332624af3cb296d700d9065d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "message",
+                                    "bot_key"
+                                ],
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Hello!"
+                                    },
+                                    "bot_key": {
+                                        "type": "string",
+                                        "example": "uuid-key-goes-here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "response": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bot not found"
+                    },
+                    "500": {
+                        "description": "Gemini API Error"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Bots",
+            "description": "Bots"
+        },
+        {
+            "name": "Chat",
+            "description": "Chat"
+        }
+    ]
+}

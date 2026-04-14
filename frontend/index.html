@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Dev Portal | Gemini 2.5 Flash</title>
+    <!-- Tailwind v4 Play CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-outfit: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        body {
+            font-family: var(--font-outfit);
+            background: radial-gradient(circle at 0% 0%, #1e1b4b, #0f172a 50%, #1e1b4b);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .animate-in {
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="selection:bg-indigo-500/30">
+
+    <div class="max-w-[1200px] mx-auto min-h-screen p-6 md:p-10 flex flex-col">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Tavyar AI <span class="text-indigo-400 font-medium">OS</span></h1>
+                    <p class="text-[10px] text-amber-500/80 font-bold tracking-[0.2em] uppercase">Gemini 3.1 Pro Intelligence</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1 glass rounded-full flex items-center gap-2 border-indigo-500/20">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">API Status: Online</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 animate-in text-slate-50">
+            <!-- Sidebar: Bot Orchestrator -->
+            <section class="flex flex-col gap-6 ">
+                <div class="glass rounded-3xl p-6 shadow-2xl border-white/5">
+                    <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Identity Forge
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Core Identity Name</label>
+                            <input type="text" id="botName" placeholder="e.g. Senior Architecture Bot" 
+                                class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors placeholder:text-slate-600">
+                        </div>
+                        
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">System Instructions</label>
+                            <textarea id="botInstruction" rows="4" placeholder="Define the behavioral parameters, persona, and constraints..." 
+                                class="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors resize-none placeholder:text-slate-600"></textarea>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Instruction File (Optional)</label>
+                            <div class="flex items-center gap-2">
+                                <label for="instructionFile" class="flex-1 bg-slate-900/50 border border-dashed border-white/10 rounded-xl px-4 py-3 text-xs text-slate-500 cursor-pointer hover:border-indigo-500/50 transition-all truncate" id="instructFileLabel">
+                                    Attach PDF/Manual as Core Brain...
+                                </label>
+                                <input type="file" id="instructionFile" class="hidden" onchange="document.getElementById('instructFileLabel').innerText = this.files[0].name">
+                            </div>
+                        </div>
+
+                        <button onclick="createBot()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]">
+                            Initialize Brain
+                        </button>
+                    </div>
+
+                    <!-- Output Key -->
+                    <div id="resultLayer" class="mt-6 hidden animate-in">
+                        <div class="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Access Key Issued</span>
+                                <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <code id="issuedKey" onclick="copyToClipboard(this.innerText)" class="font-mono text-[11px] text-emerald-200/70 bg-black/20 p-2 rounded-lg cursor-pointer hover:bg-black/40 transition-all select-all">...</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Control -->
+                <div class="glass rounded-3xl p-6 border-white/5">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1 block mb-3">Target Brain Key</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="targetKey" placeholder="Paste UUID..." 
+                            class="flex-1 bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-xs font-mono focus:outline-none focus:border-indigo-500/50 transition-colors">
+                        <button onclick="checkKey()" class="p-3 glass rounded-xl hover:bg-indigo-500/10 transition-all">
+                             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat Environment -->
+            <section class="glass rounded-3xl overflow-hidden flex flex-col shadow-2xl border-white/5">
+                <!-- Terminal Header -->
+                <div class="px-6 py-4 border-b border-white/5 bg-slate-800/20 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="flex gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500/60"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500/60"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/60"></span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-500" id="chatTitle">session::idle_state</span>
+                    </div>
+                    <button onclick="clearChat()" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-white transition-colors">Abort Terminal</button>
+                </div>
+
+                <!-- Messages Stream -->
+                <div id="messages" class="flex-1 p-6 space-y-6 overflow-y-auto max-h-[600px] scrollbar-hide">
+                    <div class="flex gap-4 animate-in">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center shrink-0 border border-indigo-500/30">
+                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                        </div>
+                        <div class="space-y-2 max-w-[85%]">
+                            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-sm leading-relaxed text-slate-300">
+                                Terminal initialized. Select or initialize an AI Identity in the forge to start the stream.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Interface -->
+                <div class="p-6 bg-slate-900/40 border-t border-white/5">
+                    <div class="relative group">
+                        <input type="text" id="userInput" onkeypress="if(event.key === 'Enter') handleSend()"
+                            placeholder="Type prompt here..."
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-24 py-5 text-sm focus:outline-none focus:border-indigo-500/50 transition-all focus:ring-4 focus:ring-indigo-500/5 group-focus-within:bg-white/[0.08]">
+                        
+                        <div class="absolute left-3 top-4">
+                             <label for="fileUpload" class="p-2 cursor-pointer hover:bg-white/10 rounded-full transition-colors block">
+                                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                <input type="file" id="fileUpload" class="hidden" onchange="handleFileChange(this)">
+                             </label>
+                        </div>
+
+                        <div class="absolute right-3 top-3 flex gap-2">
+                             <button id="sendBtn" onclick="handleSend()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-indigo-600/30">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                    <div id="fileIndicator" class="mt-2 hidden px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-between text-[11px] font-medium text-slate-300">
+                        <div class="flex items-center gap-2">
+                            <span class="truncate max-w-[200px]" id="fileNameDisplay">...</span>
+                        </div>
+                        <button onclick="clearFile()" class="text-slate-500 hover:text-red-400">&times; Remove</button>
+                    </div>
+                    <div class="mt-3 flex gap-1 items-center px-1">
+                        <div id="statusDot" class="w-1 h-1 bg-slate-600 rounded-full"></div>
+                        <span id="statusText" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">ready</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'chatbot-api.test'
+            ? '/api' 
+            : '/api'; // Relative paths work best when served from public/
+        
+        // Final fallback if running as file://
+        const BASE_URL = window.location.protocol === 'file:' ? 'http://chatbot-api.test/api' : API_BASE;
+        
+        let chatHistory = [];
+
+        async function createBot() {
+            const name = document.getElementById('botName').value;
+            const instruction = document.getElementById('botInstruction').value;
+            const fileInput = document.getElementById('instructionFile');
+            
+            if (!name || (!instruction && !fileInput.files[0])) return alert('Identity parameters or instruction file required.');
+
+            updateStatus('initializing_id', 'yellow');
+
+            try {
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('instruction', instruction);
+                if (fileInput.files[0]) {
+                    formData.append('instruction_file', fileInput.files[0]);
+                }
+
+                const res = await fetch(`${BASE_URL}/bots`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (data.key) {
+                    document.getElementById('targetKey').value = data.key;
+                    document.getElementById('issuedKey').innerText = data.key;
+                    document.getElementById('resultLayer').classList.remove('hidden');
+                    addMessage('ai', `System established. Brain ID "${data.name}" is now online and available for inference.`);
+                    updateStatus('online');
+                }
+            } catch (err) {
+                console.error(err);
+                updateStatus('failed', 'red');
+            }
+        }
+
+        async function handleSend() {
+            const bot_key = document.getElementById('targetKey').value;
+            const message = document.getElementById('userInput').value.trim();
+            const fileInput = document.getElementById('fileUpload');
+            
+            if (!message && !fileInput.files[0]) return;
+            if (!bot_key) return alert('No Target Key active.');
+
+            const displayMessage = message + (fileInput.files[0] ? `\n\r[📎 File: ${fileInput.files[0].name}]` : '');
+            addMessage('user', displayMessage);
+            
+            document.getElementById('userInput').value = '';
+            const fileName = fileInput.files[0]?.name;
+            clearFile(); // Reset file input after grabbing reference
+            
+            updateStatus('inferencing...', 'indigo');
+            
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('bot_key', bot_key);
+                formData.append('message', message);
+                if (fileInput.files[0] || (typeof selectedFile !== 'undefined' && selectedFile)) {
+                   formData.append('file', fileInput.files[0] || selectedFile);
+                }
+
+                chatHistory.forEach((item, index) => {
+                    formData.append(`history[${index}][role]`, item.role);
+                    item.parts.forEach((part, pIndex) => {
+                        formData.append(`history[${index}][parts][${pIndex}][text]`, part.text);
+                    });
+                });
+
+                const res = await fetch(`${BASE_URL}/chat`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (data.response) {
+                    addMessage('ai', data.response);
+                    chatHistory.push({ role: 'user', parts: [{ text: message + (fileName ? ` [File: ${fileName}]` : '') }] });
+                    chatHistory.push({ role: 'model', parts: [{ text: data.response }] });
+                    updateStatus('online');
+                } else {
+                    addMessage('ai', `Fatal Error: ${data.details?.error?.message || 'Connection lost'}`);
+                    updateStatus('interrupted', 'red');
+                }
+            } catch (err) {
+                addMessage('ai', 'Error: Backend terminal unreachable. Ensure Herd/API is running.');
+                updateStatus('offline', 'red');
+            } finally {
+                sendBtn.disabled = false;
+                selectedFile = null;
+            }
+        }
+
+        let selectedFile = null;
+
+        function handleFileChange(input) {
+            if (input.files && input.files[0]) {
+                selectedFile = input.files[0];
+                document.getElementById('fileNameDisplay').innerText = `READY: ${selectedFile.name}`;
+                document.getElementById('fileIndicator').classList.remove('hidden');
+            }
+        }
+
+        function clearFile() {
+            selectedFile = null;
+            document.getElementById('fileUpload').value = '';
+            document.getElementById('fileIndicator').classList.add('hidden');
+        }
+
+        function addMessage(who, text) {
+            const container = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `flex gap-4 animate-in ${who === 'user' ? 'flex-row-reverse' : ''}`;
+            
+            const avatar = who === 'user' 
+                ? '<div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 border border-emerald-500/30"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>'
+                : '<div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center shrink-0 border border-indigo-500/30"><svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>';
+
+            div.innerHTML = `
+                ${avatar}
+                <div class="space-y-2 max-w-[85%] ${who === 'user' ? 'text-right' : ''}">
+                    <div class="p-4 rounded-3xl ${who === 'user' ? 'bg-indigo-600 text-white' : 'bg-white/5 border border-white/10 text-slate-300'} text-sm leading-relaxed">
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(div);
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+
+        function updateStatus(text, color = 'emerald') {
+            const textEl = document.getElementById('statusText');
+            const dotEl = document.getElementById('statusDot');
+            
+            textEl.innerText = text;
+            textEl.className = `text-[10px] font-bold text-${color}-500/70 uppercase tracking-widest`;
+            dotEl.className = `w-1 h-1 bg-${color}-500 rounded-full ${color === 'emerald' ? '' : 'animate-pulse'}`;
+            
+            const titleEl = document.getElementById('chatTitle');
+            titleEl.innerText = `session::${text.toLowerCase().replace(' ', '_')}`;
+        }
+
+        function clearChat() {
+            document.getElementById('messages').innerHTML = '';
+            chatHistory = [];
+            addMessage('ai', 'Terminal cache cleared. Ready for new stream.');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            const keyEl = document.getElementById('issuedKey');
+            const oldText = keyEl.innerText;
+            keyEl.innerText = 'COPIED TO CLIPBOARD';
+            setTimeout(() => keyEl.innerText = oldText, 1000);
+        }
+    </script>
+</body>
+</html>
