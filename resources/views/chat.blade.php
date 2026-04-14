@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تاڤیار - چاتبۆتی کوردی</title>
     <link rel="icon" href="/storage/logo.png" type="image/png">
-    <script src="https://cdn.tailwindcss.com?v={{ time() }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js?v={{ time() }}"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -109,9 +108,9 @@
         </main>
     @else
         <main class="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 overflow-y-auto -webkit-overflow-scrolling-touch" id="messagesContainer" style="height: calc(100dvh - 180px);">
-            <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]">
+            <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse">
                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
+                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                     <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                 </div>
             </div>
@@ -213,9 +212,9 @@
                     history = [];
                     const container = document.getElementById('messagesContainer');
                     container.innerHTML = `
-                        <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]">
+                        <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse">
                             <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                            <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
+                            <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                                 <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                             </div>
                         </div>
@@ -244,10 +243,10 @@
 
                 if (type === 'ai') {
                     const htmlContent = renderMarkdown(text);
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] message-enter';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
                     messageDiv.innerHTML = `
                         <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
+                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                             ${htmlContent}
                         </div>
                     `;
@@ -257,10 +256,10 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'user') {
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] message-enter';
                     messageDiv.innerHTML = `
                         <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
-                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-left-radius: 4px;">
+                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
                             <p>${escapeHtml(text)}</p>
                         </div>
                     `;
@@ -378,18 +377,18 @@
 
                         if (msg.type === 'ai') {
                             const htmlContent = renderMarkdown(msg.text);
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse';
                             messageDiv.innerHTML = `
                                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
+                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                                     ${htmlContent}
                                 </div>
                             `;
                         } else if (msg.type === 'user') {
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]';
                             messageDiv.innerHTML = `
                                 <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
-                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-left-radius: 4px;">
+                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
                                     <p>${escapeHtml(msg.text)}</p>
                                 </div>
                             `;
