@@ -35,12 +35,17 @@
             flex-direction: column;
             padding: 1rem;
             gap: 1rem;
+            padding-bottom: 160px;
         }
 
         footer {
-            flex-shrink: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             width: 100%;
             border-top: 1px solid #1f2937;
+            z-index: 20;
         }
 
         .message-enter {
