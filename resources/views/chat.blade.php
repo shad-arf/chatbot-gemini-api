@@ -459,12 +459,16 @@
             async function sendMessage() {
                 const message = document.getElementById('userInput').value.trim();
                 const btn = document.getElementById('sendBtn');
+                const input = document.getElementById('userInput');
 
                 if (!message || !botKey) return;
 
                 addMessage('user', message, true);
-                document.getElementById('userInput').value = '';
+                input.value = '';
                 addMessage('typing', '', false);
+
+                // Disable both input and button while waiting for response
+                input.disabled = true;
                 btn.disabled = true;
 
                 const form = new FormData();
@@ -514,6 +518,8 @@
                     console.error('Fetch Error:', err);
                     addMessage('error', 'پەیوەندی پچڕا: ' + err.message, false);
                 } finally {
+                    // Re-enable both input and button when response arrives
+                    input.disabled = false;
                     btn.disabled = false;
                 }
             }
