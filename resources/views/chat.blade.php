@@ -2,318 +2,142 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تاڤیار - چاتبۆتی کوردی</title>
     <link rel="icon" href="/storage/logo.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?v={{ time() }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js?v={{ time() }}"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --bg-main: #252728;
-            --bg-panel: #1f2937;
-            --text-light: #f3f4f6;
-            --text-muted: #9CA3AF;
-            --border-color: #374151;
-            --user-bubble: #020461;
-            --user-bubble-hover: #030578;
-            --error-bg: rgba(127, 29, 29, 0.3);
-            --error-text: #fca5a5;
-            --error-border: rgba(239, 68, 68, 0.5);
+        body {
+            font-family: 'Vazirmatn', sans-serif;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-light);
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            height: 100dvh;
+            width: 100dvw;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 0 1rem;
-        }
-
-        /* Header */
-        header {
-            background-color: var(--bg-panel);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
-            flex-shrink: 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left, .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .status {
-            font-size: 0.75rem;
-            color: #4ade80;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .action-btn-icon {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 1.25rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .action-btn-icon:hover { opacity: 0.7; }
-
-        /* Main Chat Area */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem 1rem;
-            padding-bottom: 120px; /* Space for footer */
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        /* Error / No Bot State */
-        .empty-state {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 2rem;
-            text-align: center;
-            margin: auto;
-        }
-
-        .empty-state h2 { margin: 1rem 0 0.5rem; }
-        .empty-state a { color: #60a5fa; text-decoration: none; }
-
-        /* Messages */
-        .message-row {
-            display: flex;
-            gap: 12px;
-            max-width: 85%;
+        .message-enter {
             animation: slideInUp 0.3s ease-out;
         }
 
-        .ai-message {
-            align-self: flex-start;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .user-message {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #9CA3AF;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 14px;
+            animation: bounce 1.4s infinite;
         }
 
-        .user-avatar { background-color: var(--user-bubble); }
-
-        .chat-bubble {
-            padding: 12px 16px;
-            border-radius: 12px;
-            line-height: 1.6;
-            font-size: 0.9rem;
-            word-wrap: break-word;
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
         }
 
-        .ai-bubble {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-top-right-radius: 4px;
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
-        .user-bubble {
-            background-color: var(--user-bubble);
-            border-top-left-radius: 4px;
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-6px);
+            }
         }
 
-        .error-bubble {
-            background-color: var(--error-bg);
-            border: 1px solid var(--error-border);
-            color: var(--error-text);
-            text-align: center;
-            margin: 0 auto;
+        #messagesContainer {
+            height: calc(100dvh - 120px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Markdown Styles inside bubble */
-        .chat-bubble p { margin-bottom: 8px; }
-        .chat-bubble p:last-child { margin-bottom: 0; }
-        .chat-bubble code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        /* Footer Input Area */
         footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--bg-main);
-            border-top: 1px solid var(--border-color);
-            padding: 1rem 0;
-            z-index: 10;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
+            height: auto;
+            min-height: 120px;
         }
 
         input[type="text"] {
-            flex: 1;
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            color: white;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
+            font-size: 16px;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--user-bubble);
+        button {
+            font-size: 16px;
         }
-
-        .send-btn {
-            background-color: var(--user-bubble);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .send-btn:hover { background-color: var(--user-bubble-hover); }
-        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .copyright {
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-
-        /* Animations */
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Typing Indicator */
-        .typing-dots { display: flex; gap: 4px; padding: 5px; }
-        .dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite; }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="overflow-hidden bg-gray-900 text-gray-100" style="background-color: #252728;">
 
-    <header>
-        <div class="container header-content">
-            <div class="header-left">
-                <img src="/storage/logo.png" alt="Logo" class="logo-img">
-                <span class="status">
-                    <span class="status-dot"></span> ئۆنلاین
+    <header class="bg-gray-800 border-b border-gray-700 flex-shrink-0 shadow-lg" style="background-color: #1f2937;">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="/storage/logo.png" alt="Logo" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+                <span class="text-xs text-green-400 flex items-center gap-2 whitespace-nowrap">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span> ئۆنلاین
                 </span>
             </div>
-            <div class="header-right">
-                <button onclick="location.reload()" class="action-btn-icon" title="نوێکردنەوە">↻</button>
-                <button onclick="clearChat()" class="action-btn-icon" title="سڕینەوە">🗑️</button>
+            <div class="flex items-center gap-3">
+                <button onclick="location.reload()" class="text-lg cursor-pointer hover:opacity-70 transition-opacity p-2 active:scale-95" title="نوێکردنەوە">
+                    ↻
+                </button>
+                <button onclick="clearChat()" class="text-lg cursor-pointer hover:opacity-70 transition-opacity p-2 active:scale-95" title="سڕینەوە">
+                    🗑️
+                </button>
             </div>
         </div>
     </header>
 
     @if (!$bot)
-        <main>
-            <div class="empty-state container">
-                <div style="font-size: 3rem;">🤖</div>
-                <h2>{{ $error ?? 'چاتبۆت بەردەست نیە' }}</h2>
-                <p style="color: var(--text-muted);">تکایە بۆ <a href="/admin">بەڕێوەبەری سیستەم</a> بڕۆ و چاتبۆتێک دروست بکە.</p>
+        <main class="flex items-center justify-center p-4" style="height: calc(100dvh - 60px);">
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 sm:p-8 text-center max-w-md" style="background-color: #1f2937;">
+                <div class="text-4xl mb-4">🤖</div>
+                <h2 class="text-lg sm:text-2xl font-bold mb-2">{{ $error ?? 'چاتبۆت بەردەست نیە' }}</h2>
+                <p class="text-sm sm:text-base text-gray-400 mb-6">تکایە بۆ <a href="/admin" class="text-blue-400 hover:text-blue-300">بەڕێوەبەری سیستەم</a> بڕۆ و چاتبۆتێک دروست بکە.</p>
             </div>
         </main>
     @else
-        <main class="container" id="messagesContainer">
-            <div class="message-row ai-message">
-                <img src="/storage/logo.png" alt="Bot" class="avatar">
-                <div class="chat-bubble ai-bubble">
+        <main class="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 overflow-y-auto -webkit-overflow-scrolling-touch" id="messagesContainer" style="height: calc(100dvh - 180px);">
+            <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]">
+                <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
+                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
                     <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                 </div>
             </div>
         </main>
 
-        <footer>
-            <div class="container">
-                <div class="input-group">
-                    <input type="text" id="userInput" placeholder="پەیامەکەت لێرە بنووسە..." onkeypress="if(event.key === 'Enter') sendMessage()">
-                    <button onclick="sendMessage()" id="sendBtn" class="send-btn" title="بنێرە">
-                        <svg style="width: 20px; height: 20px; transform: rotate(-90deg);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <footer class="fixed bottom-0 left-0 right-0 w-full border-t border-gray-700" style="background-color: #252728;">
+            <div class="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3">
+                <div class="flex gap-2">
+                    <input type="text"
+                           id="userInput"
+                           placeholder="پەیامەکەت لێرە بنووسە..."
+                           class="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg py-3 px-3 sm:px-4 focus:outline-none focus:border-[#020461] focus:ring-1 focus:ring-[#020461] transition-all text-base" style="background-color: #1f2937; border-color: #374151; -webkit-appearance: none; border-radius: 8px;"
+                           onkeypress="if(event.key === 'Enter') sendMessage()"
+                           autocomplete="off"
+                           autocorrect="off"
+                           autocapitalize="off"
+                           spellcheck="false">
+                    <button onclick="sendMessage()" id="sendBtn" class="bg-[#020461] hover:bg-[#030578] text-white rounded-lg px-3 sm:px-4 py-3 transition-all flex items-center justify-center flex-shrink-0 active:scale-95" title="بنێرە" style="min-height: 48px; min-width: 48px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="transform: rotate(-90deg);">
                             <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
                         </svg>
                     </button>
                 </div>
-                <p class="copyright">هێزگیراوە لەلایەن تاڤیار AI - ٢٠٢٦</p>
+                <p class="text-center text-[10px] text-gray-600 mt-2 py-1">
+                    هێزگیراوە لەلایەن تاڤیار AI - ٢٠٢٦
+                </p>
             </div>
         </footer>
 
@@ -389,9 +213,9 @@
                     history = [];
                     const container = document.getElementById('messagesContainer');
                     container.innerHTML = `
-                        <div class="message-row ai-message">
-                            <img src="/storage/logo.png" alt="Bot" class="avatar">
-                            <div class="chat-bubble ai-bubble">
+                        <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]">
+                            <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
+                            <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
                                 <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                             </div>
                         </div>
@@ -420,10 +244,10 @@
 
                 if (type === 'ai') {
                     const htmlContent = renderMarkdown(text);
-                    messageDiv.className = 'message-row ai-message';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] message-enter';
                     messageDiv.innerHTML = `
-                        <img src="/storage/logo.png" alt="Bot" class="avatar">
-                        <div class="chat-bubble ai-bubble">
+                        <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
+                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
                             ${htmlContent}
                         </div>
                     `;
@@ -433,10 +257,10 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'user') {
-                    messageDiv.className = 'message-row user-message';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
                     messageDiv.innerHTML = `
-                        <div class="avatar user-avatar">👤</div>
-                        <div class="chat-bubble user-bubble">
+                        <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
+                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-left-radius: 4px;">
                             <p>${escapeHtml(text)}</p>
                         </div>
                     `;
@@ -446,21 +270,21 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'error') {
-                    messageDiv.className = 'message-row ai-message';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] mx-auto message-enter';
                     messageDiv.innerHTML = `
-                        <div class="chat-bubble error-bubble">
+                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-red-300" style="background-color: rgba(127, 29, 29, 0.3); border: 1px solid rgba(239, 68, 68, 0.5);">
                             <p>${escapeHtml(text)}</p>
                         </div>
                     `;
                 } else if (type === 'typing') {
-                    messageDiv.className = 'message-row ai-message';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 message-enter';
                     messageDiv.id = 'typingIndicator';
                     messageDiv.innerHTML = `
-                        <img src="/storage/logo.png" alt="Bot" class="avatar">
-                        <div class="typing-dots">
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
+                        <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
+                        <div class="flex gap-1 items-center p-2 sm:p-3">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
                         </div>
                     `;
                 }
@@ -554,18 +378,18 @@
 
                         if (msg.type === 'ai') {
                             const htmlContent = renderMarkdown(msg.text);
-                            messageDiv.className = 'message-row ai-message';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]';
                             messageDiv.innerHTML = `
-                                <img src="/storage/logo.png" alt="Bot" class="avatar">
-                                <div class="chat-bubble ai-bubble">
+                                <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
+                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-right-radius: 4px;">
                                     ${htmlContent}
                                 </div>
                             `;
                         } else if (msg.type === 'user') {
-                            messageDiv.className = 'message-row user-message';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse';
                             messageDiv.innerHTML = `
-                                <div class="avatar user-avatar">👤</div>
-                                <div class="chat-bubble user-bubble">
+                                <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
+                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-left-radius: 4px;">
                                     <p>${escapeHtml(msg.text)}</p>
                                 </div>
                             `;
