@@ -212,7 +212,7 @@
                     history = [];
                     const container = document.getElementById('messagesContainer');
                     container.innerHTML = `
-                        <div class="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse">
+                        <div class="flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse">
                             <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
                             <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
                                 <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
@@ -243,7 +243,7 @@
 
                 if (type === 'ai') {
                     const htmlContent = renderMarkdown(text);
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
                     messageDiv.innerHTML = `
                         <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
                         <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
@@ -256,7 +256,7 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'user') {
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] message-enter';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] message-enter';
                     messageDiv.innerHTML = `
                         <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
                         <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
@@ -269,7 +269,7 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'error') {
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] mx-auto message-enter';
+                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] mx-auto message-enter';
                     messageDiv.innerHTML = `
                         <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-red-300" style="background-color: rgba(127, 29, 29, 0.3); border: 1px solid rgba(239, 68, 68, 0.5);">
                             <p>${escapeHtml(text)}</p>
@@ -377,7 +377,7 @@
 
                         if (msg.type === 'ai') {
                             const htmlContent = renderMarkdown(msg.text);
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] ml-auto flex-row-reverse';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse';
                             messageDiv.innerHTML = `
                                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
                                 <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
@@ -385,7 +385,7 @@
                                 </div>
                             `;
                         } else if (msg.type === 'user') {
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%]';
+                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%]';
                             messageDiv.innerHTML = `
                                 <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
                                 <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
