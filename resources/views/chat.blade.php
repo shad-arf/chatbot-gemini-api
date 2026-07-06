@@ -66,8 +66,8 @@
         }
     </style>
 </head>
-<body class="overflow-hidden bg-gray-950 text-gray-100 lg:p-6" style="background-color: #17191a;">
-    <div class="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden bg-[#252728] lg:h-[calc(100dvh-3rem)] lg:max-h-[900px] lg:rounded-3xl lg:border lg:border-gray-700/80 lg:shadow-2xl">
+<body class="overflow-hidden bg-gray-950 text-gray-100" style="background-color: #17191a;">
+    <div class="mx-auto flex h-dvh w-full max-w-5xl flex-col overflow-hidden bg-[#252728] lg:border-x lg:border-gray-700/80 lg:shadow-2xl">
 
     <header class="flex-shrink-0 border-b border-gray-700/80 bg-gray-800 shadow-lg" style="background-color: #1f2937;">
         <div class="flex items-center justify-between px-4 py-3 sm:px-6">
@@ -111,8 +111,8 @@
             </div>
         </main>
 
-        <footer class="flex-shrink-0 border-t border-gray-700/80 bg-[#202223]">
-            <div class="px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
+        <footer class="mt-auto flex-shrink-0 border-t border-gray-700/80 bg-[#202223]">
+            <div class="px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 sm:px-6 sm:pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-4 lg:px-8">
                 <div class="flex gap-2">
                     <input type="text"
                            id="userInput"
