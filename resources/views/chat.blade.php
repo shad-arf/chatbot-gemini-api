@@ -57,17 +57,6 @@
             }
         }
 
-        #messagesContainer {
-            height: calc(100dvh - 120px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        footer {
-            height: auto;
-            min-height: 120px;
-        }
-
         input[type="text"] {
             font-size: 16px;
         }
@@ -77,29 +66,35 @@
         }
     </style>
 </head>
-<body class="overflow-hidden bg-gray-900 text-gray-100" style="background-color: #252728;">
+<body class="overflow-hidden bg-gray-950 text-gray-100 lg:p-6" style="background-color: #17191a;">
+    <div class="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden bg-[#252728] lg:h-[calc(100dvh-3rem)] lg:max-h-[900px] lg:rounded-3xl lg:border lg:border-gray-700/80 lg:shadow-2xl">
 
-    <header class="bg-gray-800 border-b border-gray-700 flex-shrink-0 shadow-lg" style="background-color: #1f2937;">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+    <header class="flex-shrink-0 border-b border-gray-700/80 bg-gray-800 shadow-lg" style="background-color: #1f2937;">
+        <div class="flex items-center justify-between px-4 py-3 sm:px-6">
             <div class="flex items-center gap-3">
-                <img src="/storage/logo.png" alt="Logo" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
-                <span class="text-xs text-green-400 flex items-center gap-2 whitespace-nowrap">
-                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span> ئۆنلاین
-                </span>
+                <img src="/storage/logo.png" alt="Logo" class="h-10 w-10 flex-shrink-0 rounded-full object-cover ring-1 ring-white/10">
+                <div>
+                    <h1 class="text-sm font-bold text-white sm:text-base">{{ $bot?->name ?? 'تاڤیار AI' }}</h1>
+                    <span class="mt-0.5 flex items-center gap-1.5 whitespace-nowrap text-[11px] text-green-400">
+                        <span class="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-green-400"></span> ئۆنلاین
+                    </span>
+                </div>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="location.reload()" class="text-lg cursor-pointer hover:opacity-70 transition-opacity p-2 active:scale-95" title="نوێکردنەوە">
+                <button onclick="location.reload()" class="cursor-pointer rounded-lg p-2 text-lg transition-colors hover:bg-white/10 active:scale-95" title="نوێکردنەوە">
                     ↻
                 </button>
-                <button onclick="clearChat()" class="text-lg cursor-pointer hover:opacity-70 transition-opacity p-2 active:scale-95" title="سڕینەوە">
-                    🗑️
-                </button>
+                @if ($bot)
+                    <button onclick="clearChat()" class="cursor-pointer rounded-lg p-2 text-lg transition-colors hover:bg-white/10 active:scale-95" title="سڕینەوە">
+                        🗑️
+                    </button>
+                @endif
             </div>
         </div>
     </header>
 
     @if (!$bot)
-        <main class="flex items-center justify-center p-4" style="height: calc(100dvh - 60px);">
+        <main class="flex min-h-0 flex-1 items-center justify-center p-4">
             <div class="bg-gray-800 border border-gray-700 rounded-2xl p-6 sm:p-8 text-center max-w-md" style="background-color: #1f2937;">
                 <div class="text-4xl mb-4">🤖</div>
                 <h2 class="text-lg sm:text-2xl font-bold mb-2">{{ $error ?? 'چاتبۆت بەردەست نیە' }}</h2>
@@ -107,28 +102,28 @@
             </div>
         </main>
     @else
-        <main class="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 overflow-y-auto -webkit-overflow-scrolling-touch" id="messagesContainer" style="height: calc(100dvh - 180px);">
-            <div class="flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse">
+        <main class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 py-5 sm:px-6 lg:px-8" id="messagesContainer">
+            <div class="ml-auto flex max-w-[88%] flex-row-reverse gap-2 sm:max-w-[75%] sm:gap-3">
                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
+                <div class="rounded-2xl rounded-tl-sm border border-gray-700 bg-gray-800 px-3.5 py-2.5 text-sm leading-7 shadow-sm">
                     <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                 </div>
             </div>
         </main>
 
-        <footer class="fixed bottom-0 left-0 right-0 w-full border-t border-gray-700" style="background-color: #252728;">
-            <div class="max-w-4xl mx-auto px-3 sm:px-4 py-2 sm:py-3">
+        <footer class="flex-shrink-0 border-t border-gray-700/80 bg-[#202223]">
+            <div class="px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
                 <div class="flex gap-2">
                     <input type="text"
                            id="userInput"
                            placeholder="پەیامەکەت لێرە بنووسە..."
-                           class="flex-1 bg-gray-800 border border-gray-700 text-white rounded-lg py-3 px-3 sm:px-4 focus:outline-none focus:border-[#020461] focus:ring-1 focus:ring-[#020461] transition-all text-base" style="background-color: #1f2937; border-color: #374151; -webkit-appearance: none; border-radius: 8px;"
+                           class="min-w-0 flex-1 rounded-xl border border-gray-600 bg-gray-800 px-3 py-3 text-base text-white shadow-inner transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:px-4"
                            onkeypress="if(event.key === 'Enter') sendMessage()"
                            autocomplete="off"
                            autocorrect="off"
                            autocapitalize="off"
                            spellcheck="false">
-                    <button onclick="sendMessage()" id="sendBtn" class="bg-[#020461] hover:bg-[#030578] text-white rounded-lg px-3 sm:px-4 py-3 transition-all flex items-center justify-center flex-shrink-0 active:scale-95" title="بنێرە" style="min-height: 48px; min-width: 48px;">
+                    <button onclick="sendMessage()" id="sendBtn" class="flex min-h-12 min-w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-700 px-3 py-3 text-white shadow-lg shadow-blue-950/30 transition-all hover:bg-blue-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4" title="بنێرە">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5" style="transform: rotate(-90deg);">
                             <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" />
                         </svg>
@@ -212,9 +207,9 @@
                     history = [];
                     const container = document.getElementById('messagesContainer');
                     container.innerHTML = `
-                        <div class="flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse">
+                        <div class="ml-auto flex max-w-[88%] flex-row-reverse gap-2 sm:max-w-[75%] sm:gap-3">
                             <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                            <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
+                            <div class="rounded-2xl rounded-tl-sm border border-gray-700 bg-gray-800 px-3.5 py-2.5 text-sm leading-7 shadow-sm">
                                 <p>بەخێربێیت! چۆن دەتوانم ئەمڕۆ هاوکاریت بکەم؟</p>
                             </div>
                         </div>
@@ -243,10 +238,10 @@
 
                 if (type === 'ai') {
                     const htmlContent = renderMarkdown(text);
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse message-enter';
+                    messageDiv.className = 'ml-auto flex max-w-[88%] flex-row-reverse gap-2 sm:max-w-[75%] sm:gap-3 message-enter';
                     messageDiv.innerHTML = `
                         <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
+                        <div class="min-w-0 rounded-2xl rounded-tl-sm border border-gray-700 bg-gray-800 px-3.5 py-2.5 text-sm leading-7 shadow-sm break-words">
                             ${htmlContent}
                         </div>
                     `;
@@ -256,10 +251,10 @@
                         saveMessages(messages);
                     }
                 } else if (type === 'user') {
-                    messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] message-enter';
+                    messageDiv.className = 'flex max-w-[88%] gap-2 sm:max-w-[75%] sm:gap-3 message-enter';
                     messageDiv.innerHTML = `
                         <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
-                        <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
+                        <div class="min-w-0 break-words rounded-2xl rounded-tr-sm bg-blue-700 px-3.5 py-2.5 text-sm leading-7 text-white shadow-sm">
                             <p>${escapeHtml(text)}</p>
                         </div>
                     `;
@@ -377,18 +372,18 @@
 
                         if (msg.type === 'ai') {
                             const htmlContent = renderMarkdown(msg.text);
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%] ml-auto flex-row-reverse';
+                            messageDiv.className = 'ml-auto flex max-w-[88%] flex-row-reverse gap-2 sm:max-w-[75%] sm:gap-3';
                             messageDiv.innerHTML = `
                                 <img src="/storage/logo.png" alt="Bot" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 object-cover">
-                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm" style="background-color: #1f2937; border: 1px solid #374151; border-top-left-radius: 4px;">
+                                <div class="min-w-0 rounded-2xl rounded-tl-sm border border-gray-700 bg-gray-800 px-3.5 py-2.5 text-sm leading-7 shadow-sm break-words">
                                     ${htmlContent}
                                 </div>
                             `;
                         } else if (msg.type === 'user') {
-                            messageDiv.className = 'flex gap-2 sm:gap-3 max-w-[100%] sm:max-w-[85%]';
+                            messageDiv.className = 'flex max-w-[88%] gap-2 sm:max-w-[75%] sm:gap-3';
                             messageDiv.innerHTML = `
                                 <div class="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm" style="background-color: #020461;">👤</div>
-                                <div class="rounded-lg p-2 sm:p-3 text-xs sm:text-sm text-white break-words" style="background-color: #020461; border-top-right-radius: 4px;">
+                                <div class="min-w-0 break-words rounded-2xl rounded-tr-sm bg-blue-700 px-3.5 py-2.5 text-sm leading-7 text-white shadow-sm">
                                     <p>${escapeHtml(msg.text)}</p>
                                 </div>
                             `;
@@ -406,5 +401,6 @@
         </script>
     @endif
 
+    </div>
 </body>
 </html>
